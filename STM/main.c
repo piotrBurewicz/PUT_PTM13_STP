@@ -171,10 +171,9 @@ u32 dupa(u32 data)
 
 
 /**
- * zakładam nast. ramkę: [0|1|2|3-5|6]
+ * zakładam nast. ramkę: [0|1,2|3-5|6]
  * 0 - nagłówek
- * 1 - argument
- * 2 - długość danych
+ * 1,2 - argument
  * 3-5 - dane
  * 6 - koniec ramki
  */
@@ -196,7 +195,31 @@ int strLen(char* str)
  */
 void respond(char* str)
 {
-	if(strLen(str) > 6 || strLen(str) < 4) USART_puts(USART1, "Niepelna ramka");
+	if(strLen(str) > 6 || strLen(str) < 4) 
+	{
+		USART_puts(USART1, "Niepelna ramka");
+		return;
+	}
+	if(str[1] == 0 && str[2] == 0) //diody
+	{
+		actionLed(str);
+		USART_puts(USART1, "SUCCESS!");
+		return;
+	} else if(str[1] == 0 && str[2] == 1) //echo
+	{
+		actionEcho(str);
+		USART_puts(USART1, "SUCCESS!");
+		return;
+	} else if(str[1] == 1 && str[2] == 0)
+	{
+		USART_puts(USART1, "Nieobslugiwany argument");
+		return;
+	} else if(str[1] == 1 && str[2] == 1)
+	{
+		USART_puts(USART1, "Nieobslugiwany argument");
+		return;
+	}
+	/*
 	switch(str[1])
 	{
 	case 'l':
@@ -206,7 +229,7 @@ void respond(char* str)
 	default:
 		USART_puts(USART1, "Nie obslugiwany argument");
 		break;
-	}	
+	}	*/
 
 }
 
@@ -220,6 +243,16 @@ void actionLed(char* str)
 	
 	if(str[5]) GPIO_SetBits(GPIOD,GPIO_Pin_15);
 	else GPIO_ResetBits(GPIOD,GPIO_Pin_15);
+}
+
+void actionEcho(char* str)
+{
+	int i;
+	char* tmp;
+	for(i=3; i<=5; i++)
+		tmp[i-3]=str[i];
+	tmp[3]=0;
+	USART_puts(USART1, tmp);
 }
 
 // this is the interrupt request handler (IRQ) for ALL USART1 interrupts
