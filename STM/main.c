@@ -127,6 +127,15 @@ void USART_puts(USART_TypeDef* USARTx, volatile char *s) {
 	}
 }
 
+void USART_putByte(USART_TypeDef* USARTx, volatile u08_t dataToSend) {
+
+	  /* Transmit Data */
+	  USARTx->DR = (dataToSend & (uint16_t)0x01FF);
+	// wait until data register is empty
+	while (!(USARTx->SR & 0x00000040))
+		;
+}
+
 int main(void) {
 
 	SystemInit();
@@ -263,6 +272,8 @@ void USART1_IRQHandler(void) {
 		//crc// static unsigned int tmp = 0;
 		static uint8_t cnt = 0; // this counter is used to determine the string length
 		char t = USART1->DR; // the character from the USART1 data register is saved in t
+
+		AnalyzeData(t);
 
 		/**
 		 * check if the received character is not the LF character (used to determine end of string)
