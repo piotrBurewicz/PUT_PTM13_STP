@@ -25,3 +25,14 @@ I:\PTM\SerialPortListener\SerialPortListener\obj\x86\Debug\SerialPortListener.Ma
 I:\PTM\SerialPortListener\SerialPortListener\obj\x86\Debug\SerialPortListener.Properties.Resources.resources
 I:\PTM\SerialPortListener\SerialPortListener\obj\x86\Debug\GenerateResource.read.1.tlog
 I:\PTM\SerialPortListener\SerialPortListener\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Laboratorium\Desktop\PUT_PTM13_STP-master\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.pdb
+C:\Users\Laboratorium\Desktop\PUT_PTM13_STP-master\SerialPort Listener\SerialPortListener\bin\Debug\SerialPortListener.exe
+C:\Users\Laboratorium\Desktop\PUT_PTM13_STP-master\SerialPort Listener\SerialPortListener\bin\Debug\SerialPortListener.pdb
+C:\Users\Laboratorium\Desktop\PUT_PTM13_STP-master\SerialPort Listener\SerialPortListener\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Laboratorium\Desktop\PUT_PTM13_STP-master\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.MainForm.resources
+C:\Users\Laboratorium\Desktop\PUT_PTM13_STP-master\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.Properties.Resources.resources
+C:\Users\Laboratorium\Desktop\PUT_PTM13_STP-master\SerialPort Listener\SerialPortListener\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Laboratorium\Desktop\PUT_PTM13_STP-master\SerialPort Listener\SerialPortListener\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Laboratorium\Desktop\PUT_PTM13_STP-master\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.exe
+C:\Users\Piotrek\Desktop\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.exe
+C:\Users\Piotrek\Desktop\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.pdb

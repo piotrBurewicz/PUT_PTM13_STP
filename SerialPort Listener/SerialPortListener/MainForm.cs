@@ -14,10 +14,13 @@ namespace SerialPortListener
     public partial class MainForm : Form
     {
         SerialPortManager _spManager;
+        int txtFlag;
+        string globMsg;
         public MainForm()
         {
             InitializeComponent();
-
+            txtFlag = 0;
+            globMsg = "";
             UserInitialization();
         }
 
@@ -60,7 +63,23 @@ namespace SerialPortListener
 
             // This application is connected to a GPS sending ASCCI characters, so data is converted to text
             string str = Encoding.ASCII.GetString(e.Data);
-            tbData.AppendText(str);
+            if (txtFlag == 1)
+            {
+                if (str.Length == 4)
+                {
+                    tbData.AppendText(str.Substring(0, 3));
+                }
+                else
+                {
+                    _spManager.Send(globMsg);
+                    tbStats.AppendText("\r\nSent: " + tbInput.Text.Length);
+                }
+                txtFlag = 0;
+            }
+            else
+            {
+                tbData.AppendText(str);
+            }
             tbStats.AppendText("\r\nRecieved: " + str.Length);
             tbData.ScrollToCaret();
 
@@ -85,7 +104,51 @@ namespace SerialPortListener
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _spManager.Send(tbInput.Text);
+            txtFlag = 1;
+            string msg = "101";
+            msg += tbInput.Text;
+            msg += "1";
+            globMsg = msg;
+
+
+            _spManager.Send(msg);
+            tbStats.AppendText("\r\nSent: " + tbInput.Text.Length);
+           
+        }
+
+        private void tbInput_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void wszystkie_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string msg = "100";
+            if (cbOrange.Checked)
+                msg += "1";
+            else msg += "0";
+
+            if (cbRed.Checked)
+                msg += "1";
+            else msg += "0";
+
+            if (cbBlue.Checked)
+                msg += "1";
+            else msg += "0";
+
+            msg += "1";
+
+            _spManager.Send(msg);
             tbStats.AppendText("\r\nSent: " + tbInput.Text.Length);
         }
     }
