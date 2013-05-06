@@ -129,11 +129,29 @@ void USART_puts(USART_TypeDef* USARTx, volatile char *s) {
 
 void USART_putByte(USART_TypeDef* USARTx, volatile u08_t dataToSend) {
 
-	  /* Transmit Data */
-	  USARTx->DR = (dataToSend & (uint16_t)0x01FF);
 	// wait until data register is empty
 	while (!(USARTx->SR & 0x00000040))
 		;
+	/* Transmit Data */
+	USARTx->DR = (dataToSend & (uint16_t)0x01FF);
+	
+}
+
+/**
+* b
+* 0xAA | 2B - lenght | 1B - arg | 0 - 65536B | CRC/XOR | 0x55
+*/
+void STP_send(int arg, char* data)
+{
+	int lenght = strLen(data)
+	
+	USART_putByte(USART1, (u08_t)0xAA);
+	
+	unsigned char* tmpTab = (unsigned char*)&length;
+	USART_putByte(USART1, tmpTab[0]);
+	USART_putByte(USART1, tmpTab[1]);
+	
+	
 }
 
 int main(void) {
