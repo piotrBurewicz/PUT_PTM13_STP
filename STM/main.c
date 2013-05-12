@@ -127,31 +127,53 @@ void USART_puts(USART_TypeDef* USARTx, volatile char *s) {
 	}
 }
 
-void USART_putByte(USART_TypeDef* USARTx, volatile u08_t dataToSend) {
+void USART_putByte(USART_TypeDef* USARTx, volatile uint08_t ch) {
 
 	// wait until data register is empty
 	while (!(USARTx->SR & 0x00000040))
 		;
 	/* Transmit Data */
-	USARTx->DR = (dataToSend & (uint16_t)0x01FF);
+	USARTx->DR = (ch & (uint16_t)0x01FF);
+	// USART_SendData(USART1, (uint8_t) ch);
 	
 }
 
+int _write(int file, char *ptr, int len) {
+    int n;
+    switch (file) {
+    case STDOUT_FILENO: /*stdout*/
+        for (n = 0; n < len; n++) {
+            USART_putByte(*ptr++ & (uint16_t)0x01FF);
+        }
+        break;
+    case STDERR_FILENO: /* stderr */
+        for (n = 0; n < len; n++) {
+            USART_putByte(*ptr++ & (uint16_t)0x01FF);
+        }
+        break;
+    default:
+        errno = EBADF;
+        return -1;
+    }
+    return len;
+}
+
 /**
-* b
+* 
 * 0xAA | 2B - lenght | 1B - arg | 0 - 65536B | CRC/XOR | 0x55
 */
 void STP_send(int arg, char* data)
 {
-	int lenght = strLen(data)
 	
-	USART_putByte(USART1, (u08_t)0xAA);
+	uint8_t start = 170; //0xAA
+	uint16_t length = strLen(data);
+	uint8_t end = 85; //0x55
 	
-	unsigned char* tmpTab = (unsigned char*)&length;
-	USART_putByte(USART1, tmpTab[0]);
-	USART_putByte(USART1, tmpTab[1]);
-	
-	
+	_write(STDOUT_FILENO,&start,sizeof(start);
+	_write(STDOUT_FILENO,&lenght,sizeof(length);
+	_write(STDOUT_FILENO,&arg,sizeof(arg);
+	_write(STDOUT_FILENO,data,length;
+	_write(STDOUT_FILENO,&end,sizeof(end);
 }
 
 int main(void) {
