@@ -127,53 +127,46 @@ void USART_puts(USART_TypeDef* USARTx, volatile char *s) {
 	}
 }
 
-void USART_putByte(USART_TypeDef* USARTx, volatile uint08_t ch) {
+void USART_putByte(USART_TypeDef* USARTx, volatile uint8_t ch) {
 
 	// wait until data register is empty
 	while (!(USARTx->SR & 0x00000040))
 		;
 	/* Transmit Data */
-	USARTx->DR = (ch & (uint16_t)0x01FF);
+	USARTx->DR = (ch & (uint16_t) 0x01FF);
 	// USART_SendData(USART1, (uint8_t) ch);
-	
+
 }
 
-int _write(int file, char *ptr, int len) {
-    int n;
-    switch (file) {
-    case STDOUT_FILENO: /*stdout*/
-        for (n = 0; n < len; n++) {
-            USART_putByte(*ptr++ & (uint16_t)0x01FF);
-        }
-        break;
-    case STDERR_FILENO: /* stderr */
-        for (n = 0; n < len; n++) {
-            USART_putByte(*ptr++ & (uint16_t)0x01FF);
-        }
-        break;
-    default:
-        errno = EBADF;
-        return -1;
-    }
-    return len;
+int _write(char *ptr, int len) {
+	int n;
+		for (n = 0; n < len; n++) {
+			USART_putByte(USART1, *ptr++ & (uint16_t) 0x01FF);
+		}
+	return len;
 }
 
 /**
-* 
-* 0xAA | 2B - lenght | 1B - arg | 0 - 65536B | CRC/XOR | 0x55
-*/
-void STP_send(int arg, char* data)
-{
-	
+ *
+ * 0xAA | 2B - lenght | 1B - arg | 0 - 65536B | CRC/XOR | 0x55
+ */
+void STP_send(uint8_t arg, char* data) {
+
+	int i = 0;
 	uint8_t start = 170; //0xAA
 	uint16_t length = strLen(data);
 	uint8_t end = 85; //0x55
-	
-	_write(STDOUT_FILENO,&start,sizeof(start);
-	_write(STDOUT_FILENO,&lenght,sizeof(length);
-	_write(STDOUT_FILENO,&arg,sizeof(arg);
-	_write(STDOUT_FILENO,data,length;
-	_write(STDOUT_FILENO,&end,sizeof(end);
+
+	int tmpOut = (((arg << 8) + length) << 16) + start;
+
+	USART_putByte(USART1, start & (uint16_t) 0x01FF);
+	USART_putByte(USART1, (length & 0xff) & (uint16_t) 0x01FF);
+	USART_putByte(USART1, (length >> 8) & (uint16_t) 0x01FF);
+	USART_putByte(USART1, arg & (uint16_t) 0x01FF);
+	for (i = 0; i < 1000; i++)
+			;
+	USART_puts(USART1, data);
+	USART_putByte(USART1, end & (uint16_t) 0x01FF);
 }
 
 int main(void) {
@@ -185,7 +178,7 @@ int main(void) {
 	CRC_SetIDRegister(69);
 	init_USART1(9600); // initialize USART1 @ 9600 baud
 	mryg();
-	USART_puts(USART1, "Init complete! Hello World!\r\n"); // just send a message to indicate that it works
+	STP_send(3, "Init complete! Hello World!\r\n"); // just send a message to indicate that it works
 
 	while (1) {
 		/**
@@ -220,13 +213,6 @@ int main(void) {
  }
  ;*/
 
-/**
- * zakładam nast. ramkę: [0|1,2|3-5|6]
- * 0 - nagłówek
- * 1,2 - argument
- * 3-5 - dane
- * 6 - koniec ramki
- */
 
 int strLen(char* str) {
 	int len = 0;
@@ -241,7 +227,9 @@ int strLen(char* str) {
 /**
  * l - diody
  */
-void respond(char* str) {
+void AnalyzeData(char* str) {
+
+
 	if (strLen(str) > 7) {
 		USART_puts(USART1, "\r\nZa dluga");
 		return;
@@ -258,9 +246,9 @@ void respond(char* str) {
 	} else if (str[1] == '0' && str[2] == '1') //echo
 			{
 		USART_puts(USART1, &str[3]);
-	//	USART_puts(USART1, str[4]);
-	//	USART_puts(USART1, str[5]);
-	//	USART_puts(USART1, "\r\nSUCCESS!");
+		//	USART_puts(USART1, str[4]);
+		//	USART_puts(USART1, str[5]);
+		//	USART_puts(USART1, "\r\nSUCCESS!");
 		return;
 	} else if (str[1] == '1' && str[2] == '0') {
 		USART_puts(USART1, "\r\nNieobslugiwany argument");
@@ -268,25 +256,24 @@ void respond(char* str) {
 	} else if (str[1] == '1' && str[2] == '1') {
 		USART_puts(USART1, "\r\nNieobslugiwany argument");
 		return;
-	} else
-	{
+	} else {
 		USART_puts(USART1, "\r\nNieznana ramka");
 	}
 
 }
 
 void actionLed(char* str) {
-	if (str[3]=='1')
+	if (str[3] == '1')
 		GPIO_SetBits(GPIOD, GPIO_Pin_13);
 	else
 		GPIO_ResetBits(GPIOD, GPIO_Pin_13);
 
-	if (str[4]=='1')
+	if (str[4] == '1')
 		GPIO_SetBits(GPIOD, GPIO_Pin_14);
 	else
 		GPIO_ResetBits(GPIOD, GPIO_Pin_14);
 
-	if (str[5]=='1')
+	if (str[5] == '1')
 		GPIO_SetBits(GPIOD, GPIO_Pin_15);
 	else
 		GPIO_ResetBits(GPIOD, GPIO_Pin_15);
@@ -297,12 +284,12 @@ void actionEcho(char* str) {
 	USART_puts(USART1, &tmp[1]);
 //	USART_puts(USART1, &str[4]);
 //	USART_puts(USART1, &str[5]);
-/*	int i;
-	char* tmp;
-	for (i = 3; i <= 5; i++)
-		tmp[i - 3] = str[i];
-	tmp[3] = 0;
-	USART_puts(USART1, tmp);*/
+	/*	int i;
+	 char* tmp;
+	 for (i = 3; i <= 5; i++)
+	 tmp[i - 3] = str[i];
+	 tmp[3] = 0;
+	 USART_puts(USART1, tmp);*/
 }
 
 // this is the interrupt request handler (IRQ) for ALL USART1 interrupts
@@ -311,9 +298,9 @@ void USART1_IRQHandler(void) {
 	if (USART_GetITStatus(USART1, USART_IT_RXNE)) {
 		//crc// static unsigned int tmp = 0;
 		static uint8_t cnt = 0; // this counter is used to determine the string length
-		char t = USART1->DR; // the character from the USART1 data register is saved in t
-
-		AnalyzeData(t);
+		int t = USART1->DR; // the character from the USART1 data register is saved in t
+		STP_send(1, t);
+		//AnalyzeData(t);
 
 		/**
 		 * check if the received character is not the LF character (used to determine end of string)
@@ -337,8 +324,8 @@ void USART1_IRQHandler(void) {
 
 			received_string[cnt] = 0;
 			cnt = 0;
-			if (strLen(received_string))
-				respond(received_string);
+			if (strLen(received_string));
+			//	AnalyzeData(received_string);
 
 			//USART_puts(USART1, "Odebralem: ");
 			//USART_puts(USART1, received_string);
@@ -355,19 +342,24 @@ void USART1_IRQHandler(void) {
 void mryg() {
 	int i;
 	GPIO_SetBits(GPIOD, GPIO_Pin_12);
-	for (i = 0; i < 1000000; i++)		;
+	for (i = 0; i < 1000000; i++)
+		;
 	GPIO_ResetBits(GPIOD, GPIO_Pin_12);
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_13);
-	for (i = 0; i < 1000000; i++)		;
+	for (i = 0; i < 1000000; i++)
+		;
 	GPIO_ResetBits(GPIOD, GPIO_Pin_13);
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_14);
-	for (i = 0; i < 1000000; i++)		;
+	for (i = 0; i < 1000000; i++)
+		;
 	GPIO_ResetBits(GPIOD, GPIO_Pin_14);
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_15);
-	for (i = 0; i < 1000000; i++)		;
+	for (i = 0; i < 1000000; i++)
+		;
 	GPIO_ResetBits(GPIOD, GPIO_Pin_15);
-	for (i = 0; i < 1000000; i++)		;
+	for (i = 0; i < 1000000; i++)
+		;
 }
