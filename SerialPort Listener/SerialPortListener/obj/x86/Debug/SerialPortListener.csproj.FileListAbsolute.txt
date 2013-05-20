@@ -34,5 +34,21 @@ C:\Users\Laboratorium\Desktop\PUT_PTM13_STP-master\SerialPort Listener\SerialPor
 C:\Users\Laboratorium\Desktop\PUT_PTM13_STP-master\SerialPort Listener\SerialPortListener\obj\x86\Debug\GenerateResource.read.1.tlog
 C:\Users\Laboratorium\Desktop\PUT_PTM13_STP-master\SerialPort Listener\SerialPortListener\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\Laboratorium\Desktop\PUT_PTM13_STP-master\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.exe
-C:\Users\Piotrek\Desktop\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.exe
-C:\Users\Piotrek\Desktop\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.pdb
+E:\PTM\STP z diodami i tekstem\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.exe
+E:\PTM\STP z diodami i tekstem\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.pdb
+E:\PTM\STP z diodami i tekstem\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\bin\Debug\SerialPortListener.exe
+E:\PTM\STP z diodami i tekstem\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\bin\Debug\SerialPortListener.pdb
+E:\PTM\STP z diodami i tekstem\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\ResolveAssemblyReference.cache
+E:\PTM\STP z diodami i tekstem\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.MainForm.resources
+E:\PTM\STP z diodami i tekstem\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.Properties.Resources.resources
+E:\PTM\STP z diodami i tekstem\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\GenerateResource.read.1.tlog
+E:\PTM\STP z diodami i tekstem\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\GenerateResource.write.1.tlog
+E:\PTM\STP aktualne\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.exe
+E:\PTM\STP aktualne\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.pdb
+E:\PTM\STP aktualne\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\bin\Debug\SerialPortListener.exe
+E:\PTM\STP aktualne\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\bin\Debug\SerialPortListener.pdb
+E:\PTM\STP aktualne\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\ResolveAssemblyReference.cache
+E:\PTM\STP aktualne\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.MainForm.resources
+E:\PTM\STP aktualne\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.Properties.Resources.resources
+E:\PTM\STP aktualne\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\GenerateResource.read.1.tlog
+E:\PTM\STP aktualne\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\GenerateResource.write.1.tlog

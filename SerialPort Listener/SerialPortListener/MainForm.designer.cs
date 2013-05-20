@@ -35,6 +35,7 @@
             System.Windows.Forms.Label portNameLabel;
             System.Windows.Forms.Label stopBitsLabel;
             this.baudRateComboBox = new System.Windows.Forms.ComboBox();
+            this.serialSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataBitsComboBox = new System.Windows.Forms.ComboBox();
             this.parityComboBox = new System.Windows.Forms.ComboBox();
             this.portNameComboBox = new System.Windows.Forms.ComboBox();
@@ -52,15 +53,14 @@
             this.cbOrange = new System.Windows.Forms.CheckBox();
             this.cbRed = new System.Windows.Forms.CheckBox();
             this.cbBlue = new System.Windows.Forms.CheckBox();
-            this.serialSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.button2 = new System.Windows.Forms.Button();
             baudRateLabel = new System.Windows.Forms.Label();
             dataBitsLabel = new System.Windows.Forms.Label();
             parityLabel = new System.Windows.Forms.Label();
             portNameLabel = new System.Windows.Forms.Label();
             stopBitsLabel = new System.Windows.Forms.Label();
-            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.serialSettingsBindingSource)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // baudRateLabel
@@ -116,6 +116,10 @@
             this.baudRateComboBox.Name = "baudRateComboBox";
             this.baudRateComboBox.Size = new System.Drawing.Size(121, 21);
             this.baudRateComboBox.TabIndex = 2;
+            // 
+            // serialSettingsBindingSource
+            // 
+            this.serialSettingsBindingSource.DataSource = typeof(SerialPortListener.Serial.SerialSettings);
             // 
             // dataBitsComboBox
             // 
@@ -258,6 +262,7 @@
             this.tbStats.Name = "tbStats";
             this.tbStats.Size = new System.Drawing.Size(350, 81);
             this.tbStats.TabIndex = 19;
+            this.tbStats.TextChanged += new System.EventHandler(this.tbStats_TextChanged);
             // 
             // cbOrange
             // 
@@ -290,10 +295,6 @@
             this.cbBlue.Text = "Blue";
             this.cbBlue.UseVisualStyleBackColor = true;
             // 
-            // serialSettingsBindingSource
-            // 
-            this.serialSettingsBindingSource.DataSource = typeof(SerialPortListener.Serial.SerialSettings);
-            // 
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(287, 233);
@@ -325,9 +326,9 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "MainForm";
             this.Text = "RSLog Plus";
+            ((System.ComponentModel.ISupportInitialize)(this.serialSettingsBindingSource)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.serialSettingsBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

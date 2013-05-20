@@ -14,17 +14,16 @@ namespace SerialPortListener
     public partial class MainForm : Form
     {
         SerialPortManager _spManager;
-        int txtFlag;
         string globMsg;
         public MainForm()
         {
             InitializeComponent();
-            txtFlag = 0;
             globMsg = "";
             UserInitialization();
         }
 
       
+
         private void UserInitialization()
         {
             _spManager = new SerialPortManager();
@@ -57,30 +56,22 @@ namespace SerialPortListener
                 return;
             }
 
-            int maxTextLength = 1000; // maximum text length in text box
-            if (tbData.TextLength > maxTextLength)
-                tbData.Text = tbData.Text.Remove(0, tbData.TextLength - maxTextLength);
+//           int maxTextLength = 1000; // maximum text length in text box
+//           if (tbData.TextLength > maxTextLength)
+//           tbData.Text = tbData.Text.Remove(0, tbData.TextLength - maxTextLength);
+
 
             // This application is connected to a GPS sending ASCCI characters, so data is converted to text
+
             string str = Encoding.ASCII.GetString(e.Data);
-            if (txtFlag == 1)
-            {
-                if (str.Length == 4)
-                {
-                    tbData.AppendText(str.Substring(0, 3));
-                }
-                else
-                {
-                    _spManager.Send(globMsg);
-                    tbStats.AppendText("\r\nSent: " + tbInput.Text.Length);
-                }
-                txtFlag = 0;
-            }
-            else
-            {
-                tbData.AppendText(str);
-            }
-            tbStats.AppendText("\r\nRecieved: " + str.Length);
+            
+
+
+            tbData.AppendText(str);
+            
+             
+            tbStats.AppendText("\r\nRecieved: " + str.Length + "[" + str + "]");
+   //         tbStats.AppendText("Test: " + e.Data);
             tbData.ScrollToCaret();
 
         }
@@ -104,14 +95,14 @@ namespace SerialPortListener
 
         private void button1_Click(object sender, EventArgs e)
         {
-            txtFlag = 1;
+          
             string msg = "101";
             msg += tbInput.Text;
             msg += "1";
             globMsg = msg;
 
 
-            _spManager.Send(msg);
+            _spManager.Send(tbInput.Text);
             tbStats.AppendText("\r\nSent: " + tbInput.Text.Length);
            
         }
@@ -150,6 +141,11 @@ namespace SerialPortListener
 
             _spManager.Send(msg);
             tbStats.AppendText("\r\nSent: " + tbInput.Text.Length);
+        }
+
+        private void tbStats_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

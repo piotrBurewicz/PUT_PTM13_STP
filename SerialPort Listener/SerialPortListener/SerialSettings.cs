@@ -15,7 +15,7 @@ namespace SerialPortListener.Serial
         public event PropertyChangedEventHandler PropertyChanged;
         string _portName = "";
         string[] _portNameCollection;
-        int _baudRate = 4800;
+        int _baudRate = 9600;
         BindingList<int> _baudRateCollection = new BindingList<int>();
         Parity _parity = Parity.None;
         int _dataBits = 8;
@@ -176,7 +176,7 @@ namespace SerialPortListener.Serial
             if ((possibleBaudRates & BAUD_4800) > 0)
                 _baudRateCollection.Add(4800);
             if ((possibleBaudRates & BAUD_7200) > 0)
-                _baudRateCollection.Add(7200);
+                _baudRateCollection.Add(7200); 
             if ((possibleBaudRates & BAUD_9600) > 0)
                 _baudRateCollection.Add(9600);
             if ((possibleBaudRates & BAUD_14400) > 0)
@@ -192,7 +192,7 @@ namespace SerialPortListener.Serial
             if ((possibleBaudRates & BAUD_115200) > 0)
                 _baudRateCollection.Add(115200);
             if ((possibleBaudRates & BAUD_128K) > 0)
-                _baudRateCollection.Add(128000);
+                _baudRateCollection.Add(128000); 
 
             SendPropertyChangedEvent("BaudRateCollection");
         }

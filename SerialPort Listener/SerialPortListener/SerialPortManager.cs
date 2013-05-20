@@ -65,15 +65,44 @@ namespace SerialPortListener.Serial
         
         void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            int dataLength = _serialPort.BytesToRead;
-            byte[] data = new byte[dataLength];
-            int nbrDataRead = _serialPort.Read(data, 0, dataLength);
-            if (nbrDataRead == 0)
-                return;
+            while (true)
+            {
+                int dataLength = _serialPort.BytesToRead;
+               
+                if (_serialPort.BytesToRead >= 4)
+                {
+                    byte[] data = new byte[4];
+                    int nbrDataRead = _serialPort.Read(data, 0, 4);
+                    if (nbrDataRead == 0)
+                        return;
+                    int l = ((data[2] << 8) + data[1]);
+
+                    while (_serialPort.BytesToRead < l) ;
+                    data = new byte[l];
+                    nbrDataRead = _serialPort.Read(data, 0, l);
+                    byte[] dane = new byte[l];
+                    for (int i = 0; i < l; i++)
+                    {
+                        dane[i] = data[i];
+                    }
+                    while (_serialPort.BytesToRead < 1) ;
+                    nbrDataRead = _serialPort.Read(data, 0, 1);
+
+                    // Send data to whom ever interested
+                    if (NewSerialDataRecieved != null)
+                        NewSerialDataRecieved(this, new SerialDataEventArgs(dane));
+
+
+
+                }
+            }
             
-            // Send data to whom ever interested
-            if (NewSerialDataRecieved != null)
-                NewSerialDataRecieved(this, new SerialDataEventArgs(data));
+
+
+
+            
+            
+           
         }
 
         #endregion
@@ -150,7 +179,36 @@ namespace SerialPortListener.Serial
 
         public void Send(string str)
         {
-            _serialPort.WriteLine(str);
+            byte[] a = new byte[1];
+            a = BitConverter.GetBytes(170);
+            byte[] b = new byte[2];
+            b = BitConverter.GetBytes(50000);//str.Length);
+            _serialPort.Write(a, 0 , 1);
+            _serialPort.Write(b, 0, 2);
+            //_serialPort.Write(str);
+        //    _serialPort.Write(BitConverter.GetBytes(170), 1, 1);
+         //   _serialPort.Write(BitConverter.GetBytes(170), 1, 1);
+
+            //_serialPort.WriteLine(str);
+        }
+
+        public void Send1(string str)
+        {
+            byte[] ramka = new byte[str.Length + 5];
+
+            byte[] dl = new byte[2];
+            ramka[0] = BitConverter.GetBytes(170)[0];
+            dl = BitConverter.GetBytes(str.Length);
+            ramka[1] = dl[0];
+            ramka[2] = dl[1];
+            ramka[3] = BitConverter.GetBytes(180)[0];
+            byte[] tekst = new byte [str.Length];
+            tekst = System.Text.Encoding.Unicode.GetBytes(str);
+            for (int i = 4; i < str.Length; i++)
+                ramka[i] = tekst[i-4];
+            ramka[str.Length + 4] = BitConverter.GetBytes(190)[0];
+         //   for(int j=0;j<str.Length;j++)
+            _serialPort.Write(ramka, 0, str.Length+5);
         }
 
         #endregion
