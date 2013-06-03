@@ -79,12 +79,14 @@ namespace SerialPortListener
         // Handles the "Start Listening"-buttom click event
         private void btnStart_Click(object sender, EventArgs e)
         {
+            MainForm.ActiveForm.Text = "RSLog Plus | Listening...";
             _spManager.StartListening();
         }
 
         // Handles the "Stop Listening"-buttom click event
         private void btnStop_Click(object sender, EventArgs e)
         {
+            MainForm.ActiveForm.Text = "RSLog Plus";
             _spManager.StopListening();
         }
 
@@ -146,6 +148,11 @@ namespace SerialPortListener
         private void tbStats_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void bClear_Click(object sender, EventArgs e)
+        {
+            tbData.Text = "";
         }
     }
 }

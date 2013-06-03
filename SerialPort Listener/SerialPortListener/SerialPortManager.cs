@@ -67,33 +67,35 @@ namespace SerialPortListener.Serial
         {
             while (true)
             {
-                int dataLength = _serialPort.BytesToRead;
-               
-                if (_serialPort.BytesToRead >= 4)
+                if (_serialPort.IsOpen)
                 {
-                    byte[] data = new byte[4];
-                    int nbrDataRead = _serialPort.Read(data, 0, 4);
-                    if (nbrDataRead == 0)
-                        return;
-                    int l = ((data[2] << 8) + data[1]);
-
-                    while (_serialPort.BytesToRead < l) ;
-                    data = new byte[l];
-                    nbrDataRead = _serialPort.Read(data, 0, l);
-                    byte[] dane = new byte[l];
-                    for (int i = 0; i < l; i++)
+                    int dataLength = _serialPort.BytesToRead;
+                    if (_serialPort.BytesToRead >= 4)
                     {
-                        dane[i] = data[i];
+                        byte[] data = new byte[4];
+                        int nbrDataRead = _serialPort.Read(data, 0, 4);
+                        if (nbrDataRead == 0)
+                            return;
+                        int l = ((data[2] << 8) + data[1]);
+
+                        while (_serialPort.BytesToRead < l) ;
+                        data = new byte[l];
+                        nbrDataRead = _serialPort.Read(data, 0, l);
+                        byte[] dane = new byte[l];
+                        for (int i = 0; i < l; i++)
+                        {
+                            dane[i] = data[i];
+                        }
+                        while (_serialPort.BytesToRead < 1) ;
+                        nbrDataRead = _serialPort.Read(data, 0, 1);
+
+                        // Send data to whom ever interested
+                        if (NewSerialDataRecieved != null)
+                            NewSerialDataRecieved(this, new SerialDataEventArgs(dane));
+
+
+
                     }
-                    while (_serialPort.BytesToRead < 1) ;
-                    nbrDataRead = _serialPort.Read(data, 0, 1);
-
-                    // Send data to whom ever interested
-                    if (NewSerialDataRecieved != null)
-                        NewSerialDataRecieved(this, new SerialDataEventArgs(dane));
-
-
-
                 }
             }
             
@@ -179,17 +181,22 @@ namespace SerialPortListener.Serial
 
         public void Send(string str)
         {
-            byte[] a = new byte[1];
-            a = BitConverter.GetBytes(170);
-            byte[] b = new byte[2];
-            b = BitConverter.GetBytes(50000);//str.Length);
-            _serialPort.Write(a, 0 , 1);
-            _serialPort.Write(b, 0, 2);
-            //_serialPort.Write(str);
-        //    _serialPort.Write(BitConverter.GetBytes(170), 1, 1);
-         //   _serialPort.Write(BitConverter.GetBytes(170), 1, 1);
+            //byte[] naglowek = new byte[4];
+            //naglowek[0] = (byte)170;
 
-            //_serialPort.WriteLine(str);
+            byte[] a = new byte[4];
+            a = BitConverter.GetBytes(170);
+            System.Buffer.BlockCopy(BitConverter.GetBytes(str.Length), 0, a, 1, 2);
+            System.Buffer.BlockCopy(BitConverter.GetBytes(1), 0, a, 3, 1);
+            _serialPort.Write(a, 0 , 4);
+            _serialPort.WriteLine(str);
+            a = BitConverter.GetBytes(85);
+            _serialPort.Write(a, 0, 1);
+
+        //  _serialPort.Write(str);
+        //  _serialPort.Write(BitConverter.GetBytes(170), 1, 1);
+        //  _serialPort.Write(BitConverter.GetBytes(170), 1, 1);
+        //  _serialPort.WriteLine(str);
         }
 
         public void Send1(string str)

@@ -52,3 +52,23 @@ E:\PTM\STP aktualne\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86
 E:\PTM\STP aktualne\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.Properties.Resources.resources
 E:\PTM\STP aktualne\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\GenerateResource.read.1.tlog
 E:\PTM\STP aktualne\PUT_PTM13_STP\SerialPort Listener\SerialPortListener\obj\x86\Debug\GenerateResource.write.1.tlog
+D:\STPp\git\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.pdb
+D:\STPp\git\SerialPort Listener\SerialPortListener\bin\Debug\SerialPortListener.exe
+D:\STPp\git\SerialPort Listener\SerialPortListener\bin\Debug\SerialPortListener.pdb
+D:\STPp\git\SerialPort Listener\SerialPortListener\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\STPp\git\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.MainForm.resources
+D:\STPp\git\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.Properties.Resources.resources
+D:\STPp\git\SerialPort Listener\SerialPortListener\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\STPp\git\SerialPort Listener\SerialPortListener\obj\x86\Debug\GenerateResource.write.1.tlog
+D:\STPp\git\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.exe
+F:\PTM\STP NAJNOWSZE\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.exe
+F:\PTM\STP NAJNOWSZE\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.pdb
+F:\PTM\STP NAJNOWSZE\SerialPort Listener\SerialPortListener\bin\Debug\SerialPortListener.exe
+F:\PTM\STP NAJNOWSZE\SerialPort Listener\SerialPortListener\bin\Debug\SerialPortListener.pdb
+F:\PTM\STP NAJNOWSZE\SerialPort Listener\SerialPortListener\obj\x86\Debug\ResolveAssemblyReference.cache
+F:\PTM\STP NAJNOWSZE\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.MainForm.resources
+F:\PTM\STP NAJNOWSZE\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.Properties.Resources.resources
+F:\PTM\STP NAJNOWSZE\SerialPort Listener\SerialPortListener\obj\x86\Debug\GenerateResource.read.1.tlog
+F:\PTM\STP NAJNOWSZE\SerialPort Listener\SerialPortListener\obj\x86\Debug\GenerateResource.write.1.tlog
+I:\PTM\STP NAJNOWSZE\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.exe
+I:\PTM\STP NAJNOWSZE\SerialPort Listener\SerialPortListener\obj\x86\Debug\SerialPortListener.pdb
