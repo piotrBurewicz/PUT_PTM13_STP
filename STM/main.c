@@ -5,14 +5,25 @@
 #include <stm32f4xx_gpio.h>
 #include <stm32f4xx_rcc.h>
 #include <stm32f4xx_crc.h>
+#include <stdlib.h>
 
-#define MAX_STRLEN 12 		 // this is the maximum string length of our string in characters
-volatile char received_string[MAX_STRLEN + 1]; // this will hold the recieved string
+//#define MAX_STRLEN 12 		 // this is the maximum string length of our string in characters
+typedef struct stp_data stp_data;
+volatile char received_string[4];
+volatile char data[65536];
+volatile int CURRENT_LENGTH;
+volatile int CURRENT_ARG;
+volatile int READY_FLAG = 0;
 
 void Delay(__IO uint32_t nCount) {
 	while (nCount--) {
 	}
 }
+
+struct stp_data{
+	char f_data[65536];
+	int arg;
+};
 
 void init_GPIO() {
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
@@ -138,16 +149,8 @@ void USART_putByte(USART_TypeDef* USARTx, volatile uint8_t ch) {
 
 }
 
-int _write(char *ptr, int len) {
-	int n;
-		for (n = 0; n < len; n++) {
-			USART_putByte(USART1, *ptr++ & (uint16_t) 0x01FF);
-		}
-	return len;
-}
-
 /**
- *
+ * Frame:
  * 0xAA | 2B - lenght | 1B - arg | 0 - 65536B | CRC/XOR | 0x55
  */
 void STP_send(uint8_t arg, char* data) {
@@ -169,6 +172,20 @@ void STP_send(uint8_t arg, char* data) {
 	USART_putByte(USART1, end & (uint16_t) 0x01FF);
 }
 
+stp_data STPRead(){
+	if (strLen(data) > 0 && READY_FLAG) {
+		stp_data d = { .f_data = data, .arg = CURRENT_ARG };
+		return d;
+	} else {
+		stp_data d = { .f_data = "", .arg = 0 };
+		return d;
+	}
+}
+
+int STPStatus(){
+	return READY_FLAG;
+}
+
 int main(void) {
 
 	SystemInit();
@@ -181,9 +198,10 @@ int main(void) {
 	STP_send(3, "Init complete! Hello World!\r\n"); // just send a message to indicate that it works
 
 	while (1) {
-		/**
-		 * You can do whatever you want in here
-		 */
+		if(/*STPStatus()*/READY_FLAG){
+			stp_data r = STPRead();
+			STP_send(r.arg, r.f_data);
+		}
 	}
 }
 /*
@@ -213,7 +231,6 @@ int main(void) {
  }
  ;*/
 
-
 int strLen(char* str) {
 	int len = 0;
 	int i = 0;
@@ -224,42 +241,8 @@ int strLen(char* str) {
 	return len;
 }
 
-/**
- * l - diody
- */
 void AnalyzeData(char* str) {
-
-
-	if (strLen(str) > 7) {
-		USART_puts(USART1, "\r\nZa dluga");
-		return;
-	}
-	if (strLen(str) < 4) {
-		USART_puts(USART1, "\r\nNiepelna ramka");
-		return;
-	}
-	if (str[1] == '0' && str[2] == '0') //diody
-			{
-		actionLed(str);
-		USART_puts(USART1, "\r\nSUCCESS!");
-		return;
-	} else if (str[1] == '0' && str[2] == '1') //echo
-			{
-		USART_puts(USART1, &str[3]);
-		//	USART_puts(USART1, str[4]);
-		//	USART_puts(USART1, str[5]);
-		//	USART_puts(USART1, "\r\nSUCCESS!");
-		return;
-	} else if (str[1] == '1' && str[2] == '0') {
-		USART_puts(USART1, "\r\nNieobslugiwany argument");
-		return;
-	} else if (str[1] == '1' && str[2] == '1') {
-		USART_puts(USART1, "\r\nNieobslugiwany argument");
-		return;
-	} else {
-		USART_puts(USART1, "\r\nNieznana ramka");
-	}
-
+	CURRENT_LENGTH = (str[2] << 8) + str[1];
 }
 
 void actionLed(char* str) {
@@ -294,47 +277,47 @@ void actionEcho(char* str) {
 
 // this is the interrupt request handler (IRQ) for ALL USART1 interrupts
 void USART1_IRQHandler(void) {
+	static uint8_t reading_flag = 0;
 	// check if the USART1 receive interrupt flag was set
 	if (USART_GetITStatus(USART1, USART_IT_RXNE)) {
-		//crc// static unsigned int tmp = 0;
-		static uint8_t cnt = 0; // this counter is used to determine the string length
+
+		static int cnt = 0; // this counter is used to determine the string length
 		int t = USART1->DR; // the character from the USART1 data register is saved in t
-		STP_send(1, t);
+		//STP_send(1, t);
 		//AnalyzeData(t);
 
-		/**
-		 * check if the received character is not the LF character (used to determine end of string)
-		 * or the if the maximum string length has been been reached
-		 */
 		GPIO_SetBits(GPIOD, GPIO_Pin_12);
-		if ((t != '\n') && (cnt < MAX_STRLEN)) {
+		if (reading_flag == 0) {
+			if ((cnt < 4)) {
+				if(READY_FLAG) READY_FLAG = 0;
+				received_string[cnt] = t;
+				cnt++;
+			}
+			if (cnt == 4 && received_string[0] == 170) {
+				//AnalyzeData(received_string);
+				CURRENT_LENGTH = ((received_string[2] << 8) + received_string[1])+1;
+				//data[0] = 0;
 
-			received_string[cnt] = t;
-			//crc// tmp<<=8;
-			//crc// tmp|=t;
-			cnt++;
-			//crc//if (!(cnt%4))
-			//crc// CRC_CalcCRC(tmp);
-		} else { // otherwise reset the character counter and print the received string
+				received_string[cnt] = 0;
+				cnt = 0;
+				GPIO_ResetBits(GPIOD, GPIO_Pin_12);
+				reading_flag = 1;
+			}
+		}
+		else{
+			if (cnt < CURRENT_LENGTH) {
+				data[cnt] = t;
+				cnt++;
+			} else {
+				if(t!='\n');
+				if(data);
+				char asd = t;
+				READY_FLAG = 1;
+				cnt = 0;
+				GPIO_ResetBits(GPIOD, GPIO_Pin_12);
+				reading_flag = 0;
+			}
 
-			//crc//if (cnt%4) {
-			//crc//	tmp<<=8*(4-(cnt%4));
-			//crc//	CRC_CalcCRC(tmp);
-			//crc//}
-
-			received_string[cnt] = 0;
-			cnt = 0;
-			if (strLen(received_string));
-			//	AnalyzeData(received_string);
-
-			//USART_puts(USART1, "Odebralem: ");
-			//USART_puts(USART1, received_string);
-			//crc//USART_puts(USART1, " CRC: ");
-			//crc//char buff[10];
-			//crc//USART_puts(USART1,toHEX(buff,10,dupa(CRC_GetCRC()^0xFFFFFFFF)));
-			//USART_puts(USART1,"\r\n");
-			GPIO_ResetBits(GPIOD, GPIO_Pin_12);
-			//crc//CRC_ResetDR();
 		}
 	}
 
