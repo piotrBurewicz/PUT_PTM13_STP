@@ -86,10 +86,19 @@ namespace SerialPortListener.Serial
                         {
                             dane[i] = data[i];
                         }
-                        while (_serialPort.BytesToRead < 1) ;
+                        //CRC
+                        byte[] crcrec = new byte[4];
                         nbrDataRead = _serialPort.Read(data, 0, 1);
+                        
+                        while (_serialPort.BytesToRead < 4) ;
+                        int crcodebr = _serialPort.Read(crcrec, 0, 4);
+                        UInt32 aaa = Crc32.Compute(dane);
+                        UInt32 bbb = BitConverter.ToUInt32(crcrec, 0); 
+                 //       UInt32 ccc = BitConverter.ToUInt32(Crc32., 0);
+//                        if (Crc32.Compute(dane) != BitConverter.ToUInt32(crcrec, 0)) return;
+                        //CRC
 
-                        // Send data to whom ever interested
+                        while (_serialPort.BytesToRead < 1) ;
                         if (NewSerialDataRecieved != null)
                             NewSerialDataRecieved(this, new SerialDataEventArgs(dane));
 
@@ -190,6 +199,12 @@ namespace SerialPortListener.Serial
             System.Buffer.BlockCopy(BitConverter.GetBytes(1), 0, a, 3, 1);
             _serialPort.Write(a, 0 , 4);
             _serialPort.WriteLine(str);
+            //CRC
+            byte[] b2 = System.Text.Encoding.ASCII.GetBytes(str);
+            a = BitConverter.GetBytes(Crc32.Compute(b2));
+            UInt32 aaa = Crc32.Compute(b2);     
+            _serialPort.Write(a, 0, 4);
+            //CRC
             a = BitConverter.GetBytes(85);
             _serialPort.Write(a, 0, 1);
 
